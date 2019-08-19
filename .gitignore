@@ -96,21 +96,21 @@ media/
 
 # dependencies
 web/node_modules
-/.pnp
-.pnp.js
+web/.pnp
+web/.pnp.js
 
 # testing
-/coverage
+web/coverage
 
 # production
-/build
+web/build
 
 # misc
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+web/.DS_Store
+web/.env.local
+web/.env.development.local
+web/.env.test.local
+web/.env.production.local
 
 web/npm-debug.log*
 web/yarn-debug.log*

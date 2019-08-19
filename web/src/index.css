@@ -1,0 +1,185 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+
+  font-family: 'Montserrat', sans-serif;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+
+ul {
+  list-style: none;
+}
+
+a {
+  border-color: "#dcdcd";
+ 
+  color: #0a8080;
+  cursor: pointer;
+
+  /* color: #82BE42; */
+
+   text-decoration: none;
+}
+
+.pt {
+  padding-top: 2rem;
+  align-items: center !important;
+}
+
+
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #1c1c1c; }
+
+h1 {
+  font-size: 27px;
+  line-height: 36px; }
+  @media (min-width: 768px) {
+    h1 {
+      font-size: 32px;
+      line-height: 40px; } }
+
+h2 {
+  font-size: 24px;
+  line-height: 32px; }
+  @media (min-width: 768px) {
+    h2 {
+      font-size: 27px;
+      line-height: 36px; } }
+
+h3 {
+  font-size: 21px;
+  line-height: 27px; }
+  @media (min-width: 768px) {
+    h3 {
+      font-size: 24px;
+      line-height: 32px; } }
+
+h4 {
+  font-size: 18px;
+  line-height: 27px; }
+  @media (min-width: 768px) {
+    h4 {
+      font-size: 21px;
+      line-height: 27px; } }
+
+h5 {
+  font-size: 16px;
+  line-height: 24px; }
+  @media (min-width: 768px) {
+    h5 {
+      font-size: 18px;
+      line-height: 27px; } }
+
+h6 {
+  font-size: 14px;
+  line-height: 20px; }
+  @media (min-width: 768px) {
+    h6 {
+      font-size: 16px;
+      line-height: 24px; } }
+
+p {
+  margin: 0 0 10px; }
+
+.title {
+  font-weight: 600;
+  margin: 0;
+ 
+  color: #1c1c1c; 
+}
+
+
+
+fieldset {
+  border: none;
+}
+
+
+select {
+  background-color: white; 
+
+}
+
+input, select {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.left {
+  text-align: left;
+}
+
+.modal-header {
+  padding: 40px 50px 30px;
+  border-bottom: 1px solid #eaeaea;
+  margin-bottom: 20px;
+}
+
+.danger {
+  color: red;
+  
+}
+
+.danger i {
+  padding: 0 10px;
+}
+
+
+a {
+  outline: none;
+}
+
+button {
+  outline: none;
+}
+
+.active > li {
+  color: "#82BE42" !important;
+}
+
+.center {
+  display: grid;
+
+  place-items: center;
+
+  text-align: center;
+
+  grid-gap: 1rem;
+}
+
+
+.center-text {
+  display: grid;
+
+  place-items: center;
+
+  text-align: center;
+
+
+  padding: 1rem;
+}
