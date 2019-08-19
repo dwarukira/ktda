@@ -217,16 +217,23 @@ class Query(graphene.ObjectType):
 
     def resolve_gender_grade_distribution(self, info):
         alumni = Student.objects.filter(kcse__isnull=False)
+        total_male = alumni.filter(gender="M").count()
+        total_female = alumni.filter(gender="F").count()
+
+        total_other = alumni.filter(gender="O").count()
+
  
         l = []
         for grade in grades_gen():
             gd = alumni.filter(kcse=grade)
 
+            print(gd.filter(gender="M").count() / total_female)
+
             l.append(GenderGradeDist(
                 grade = grade,
-                total_males = gd.filter(gender="M").count(),
-                total_females = gd.filter(gender="F").count(),
-                total_others = gd.filter(gender="O").count()
+                total_males = gd.filter(gender="M").count() / total_male * 100,
+                total_females = gd.filter(gender="F").count() / total_female * 100,
+                total_others = gd.filter(gender="O").count() / total_other * 100
             ))
 
         

@@ -1,6 +1,6 @@
-import React from "react"
+import React, { useState } from "react"
 import { Title } from "../../components/text";
-import Form from "../students/new/form";
+import Form, { StyledFormActions } from "../students/new/form";
 import { Input } from "../students/new";
 import styled from "@emotion/styled";
 import colors from "../../styles/colors";
@@ -9,11 +9,17 @@ import Button from "../../components/Button";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import useForm from "react-hook-form";
+import { Checkbox, TextArea } from "../../components/form/input";
+// import { TextArea, Checkbox, DropdownInput } from "../../components/form/input";
 
 const SendSMS = gql`
-    mutation SendSms($message: String!) {
+    mutation SendSms($message: String!, $useGroup: String, $group: String, $phone: String) {
         sendSms(input: {
-            message: $message
+            message: $message,
+            useGroup: $useGroup,
+            group: $group,
+            phone: $phone,
+
         }) {
             ok
         }
@@ -22,10 +28,12 @@ const SendSMS = gql`
 
 const NewMessage = ({ }) => {
     const { handleSubmit, register, errors } = useForm()
-    const [ sendMessage, { loading, error } ] = useMutation(SendSMS, {
+    const [ selected, setSelected ] = useState("individual")
+    const [ checked, setChecked ] = useState(true)
+    const [sendMessage, { loading, error }] = useMutation(SendSMS, {
         onCompleted: (sendMessage) => {
             console.log(sendMessage);
-            
+
         }
     })
 
@@ -37,11 +45,21 @@ const NewMessage = ({ }) => {
 
         sendMessage({
             variables: {
-                message: data.message
+                message: data.message,
+                phone: data.phone,
+                group: selected,
+                useGroup: checked
             }
         })
-        
 
+
+
+    }
+
+    const handleOnChange = (e: any) => {
+        console.log(e, "------------>");
+        setChecked(!checked)
+        setSelected("group")
         
     }
 
@@ -49,62 +67,95 @@ const NewMessage = ({ }) => {
     return (
         <Form onSubmit={handleSubmit(onSubmit)}>
             <Title> Compose a new message </Title>
-        
-            <Row>
-                
-                <Col sm={6}>
+
+            <Form>
+                <Row className="pt">
+                    <TextArea
+                            label="Message"
+                            name="message"
+                            register={register({ required: true })}
+                            error={errors.name}
+                            rows="10" 
+                            cols="100"
+                        />
+                </Row>
+
+
+                <Row className="pt">
                    
-                    {/* <TextArea 
-                        cols="30"
-                        name="message"
-                        ref={register({ required: true })}
-                        rows="5" /> */}
+                    <Col sm={2}> 
+                        <label> Indivulal </label> 
+                    </Col>
+                    <Col sm={6}>
+                        <Checkbox 
+                            checked={checked} 
+                            
+                            onClick={(event: any) => {
+                                console.log(event, "");
+                                
+                                setChecked(!checked)
+                                setSelected("individual")
 
-                      <Input />
+                        }} />
+                    </Col>
+                </Row>
 
-                        
-                </Col>
 
-                <Col>
-                    
-                </Col>
+                <Row className="pt">
+                   
+                    <Col sm={2}> 
+                        <label> Use Group </label> 
+                    </Col>
+                    <Col sm={6}>
+                        <Checkbox 
+                            checked={!checked}
+                            onClick={handleOnChange}
+                        />
+                    </Col>
+                </Row>
+
+
+                {selected !== "individual" ? <Row className="pt">
+                    <Input
+                            label="Sender Group"
+                            name="name"
+                            dropdown={true}
+                            options={["Gurdian", "Schools"]}
+                            register={register({ required: true })}
+                            error={errors.name}
+                        />
+                </Row> :
+
+
+                <Row className="pt">
+                    <Input
+                            label="Phones"
+                            name="name"
+                            register={register({ required: true })}
+                            error={errors.name}
+                        />
+                </Row> }
+
+
                 
-            </Row>
-           
 
-           <Button type="submit" > Send </Button>
+
+
+
+            </Form>
             
+
+            <StyledFormActions className="mt-10">
+                <Button background={colors.primary} color="white" > Preview </Button>
+                <Button> Cancel </Button>
+
+            </StyledFormActions>
+
         </Form>
     )
 }
 
 
-const TextArea = styled.textarea`
-    background-color: ${colors.white};
-    border: none;
-    box-shadow: 0 0 0 1.5px ${props => props.error ? '#d5351f' : '#919197'  } inset;
-    border-radius: 4px;
-    color: ${props => props.error ? '#d5351f' : '##919197'  };
-    font-size: 1em;
-    font-weight: 400;
-    line-height: 22px;
 
-    box-sizing:content-box;
-
-
-    padding: 3px 10px 3px;
-    transition: border 0.2s linear 0s;
-
-    width: 100%;
-
-
-    &:focus {
-        box-shadow: 0 0 0 2px ${props => props.error ? '#d5351f' : colors.primary  } inset;
-
-
-        outline: none
-    }
-
-` as React.FC<any>
 
 export default NewMessage

@@ -183,3 +183,7 @@ button {
 
   padding: 1rem;
 }
+
+.mt-10 {
+  margin: 100px !important;
+}

@@ -12,7 +12,7 @@ import { withRouter } from "react-router-dom";
 import onboard from "../../../icons/students.png";
 import { Title } from "../../../components/text";
 
-const WithError = styled.div`
+export const WithError = styled.div`
     span {
         color: #d5351f;
         text-align: left;

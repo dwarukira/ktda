@@ -39,12 +39,18 @@ const GenderGradeDistribution = () => {
         },
 
         subtitle: {
-            text: `She graceful shy believed distance use nay. Lively is people so basket ladies window expect.`
+            text: `
+                This shows the KCSE performance distrubution accross gender by grade, 
+            `
         },
-
+       yAxis: {
+           title: {
+            text:"Students percentage"
+           }
+       },
 
         xAxis: {
-            categories: grades
+            categories: grades,
         },
         series: [{
             // pointWidth: 20,

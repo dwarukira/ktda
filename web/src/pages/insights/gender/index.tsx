@@ -25,11 +25,11 @@ const GenderParity = () => {
 
     const generalGender: Highcharts.Options = {
         title: {
-            text: 'General Gender Parity'
+            text: 'Gender Gap'
         },
 
         subtitle: {
-            text: `Sociable formerly six but handsome. Up do view time they shot. He concluded disposing provision by questions as situation`
+            text: `This shows the number of students sponsored by gender`
         },
 
         chart: {
