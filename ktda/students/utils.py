@@ -1,3 +1,14 @@
 
 def grades_gen():
-    return ["B-", "B+", "C+", "C-", "D+", "D-", "A", "A-", "B", "C", "D", "E"]
+    return ['A', 'A-', 'B+', "B", "B-", "C+", 'C', "C-", "D+", "D", "D-", "E"]
+
+
+def grades_with_value():
+    grades = grades_gen()
+    l = {}
+    c = 12
+    for i in grades:
+        l[i] = c
+        c -= 1
+
+    return l
