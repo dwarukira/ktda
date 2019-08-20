@@ -2,6 +2,7 @@ import React from "react";
 import ProgramInsights from "./program_insights";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
+import Error from "../../components/error";
 
 
 const BasicAnalysis = gql`
@@ -19,7 +20,7 @@ const Dashboard = () => {
     const { data, loading, error } = useQuery(BasicAnalysis)
 
     if(error) {
-        return <> Loading .... </>
+        return <> <Error /> </>
     }
 
 

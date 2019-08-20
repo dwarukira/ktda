@@ -10,6 +10,7 @@ import gql from "graphql-tag";
 import colors from "../../styles/colors";
 import { SyncLoader } from "react-spinners";
 import Search from "../../components/form/search";
+import Error from "../../components/error";
 
 const GET_STUDENTS = gql`
     query GetStudentsPaginated($page: Int!, $f: String, $search: String){
@@ -60,11 +61,11 @@ const Students = ({ history }: any) => {
         notifyOnNetworkStatusChange: true
     })
 
-    const { data: totals, loading: totalsLoading } = useQuery(GET_TOTAL)
+    const { data: totals, loading: totalsLoading, error: totalError } = useQuery(GET_TOTAL)
 
-    console.log(error);
-    
-
+    if(error || totalError) {
+        return <Error />
+    }
     
     return (
         <>
