@@ -5,6 +5,7 @@ from ktda.students.models import Student, SchoolFees, SchoolPerformance
 
 
 class StudentType(DjangoObjectType):
+    total_spent = graphene.Decimal()
     class Meta:
         model = Student
 

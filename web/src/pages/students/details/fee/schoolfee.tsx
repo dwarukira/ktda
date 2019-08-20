@@ -10,6 +10,7 @@ import Modal from "../../../../components/modal";
 import AddSchoolFee from "./addSchoolFee";
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
+import { getCash } from "../../../../utils";
 
 
 const GET_DETAILED_STUDENTS = gql`
@@ -18,6 +19,8 @@ const GET_DETAILED_STUDENTS = gql`
             name
             id
             studentId
+
+            totalSpent
             fee {
                 id
                 ammount
@@ -120,7 +123,8 @@ const StudentFee = ({ history, match }: any) => {
 
 
                     <Card>
-                        Total Spent on student
+                        <h2>  Total Spent on student </h2>
+                        <h3> <a> { data.student ?  getCash(data.student.totalSpent) : '' } </a> </h3>
                     </Card>
 
                 </Col>

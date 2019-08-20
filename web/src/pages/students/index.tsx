@@ -9,10 +9,11 @@ import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import colors from "../../styles/colors";
 import { SyncLoader } from "react-spinners";
+import Search from "../../components/form/search";
 
 const GET_STUDENTS = gql`
-    query GetStudentsPaginated($page: Int!, $f: String){
-        paginatedStudent(page: $page, f: $f) {
+    query GetStudentsPaginated($page: Int!, $f: String, $search: String){
+        paginatedStudent(page: $page, f: $f, search: $search) {
             objects {
                 name
                 year
@@ -47,11 +48,13 @@ const GET_TOTAL = gql`
 const Students = ({ history }: any) => {
 
     const [ filter, setFilter ]= useState()
+    const [ search, setSearch ] = useState('')
 
     const { data, error, loading, fetchMore, networkStatus } = useQuery(GET_STUDENTS, {
         variables: {
             page: 1,
             f: filter,
+            search: search
             
         },
         notifyOnNetworkStatusChange: true
@@ -59,6 +62,8 @@ const Students = ({ history }: any) => {
 
     const { data: totals, loading: totalsLoading } = useQuery(GET_TOTAL)
 
+    console.log(error);
+    
 
     
     return (
@@ -79,8 +84,9 @@ const Students = ({ history }: any) => {
 
                 }}> Alumni <span>  ({ totals.formTotals ? totals.formTotals.alumni: '' }) </span> </li>
             </Tabs>
-
+            
             <PageGrid>
+               {!error ? (<>
                { data.paginatedStudent ? <StudentList 
                     students={data.paginatedStudent.objects} 
                     nextPage={data.paginatedStudent.nextPage} 
@@ -94,9 +100,19 @@ const Students = ({ history }: any) => {
                         color={colors.primary}
                         loading={!data.paginatedStudent}
                     />
-               }
+               } </>
+            ) : <p> Not Records found </p> }
                 
                 <div>
+                    <StyledExtra>
+                        <Search placeholder="Search ..." 
+                                onChange={(e:any) => {
+                                    setSearch(e.target.value)
+                                }}
+                                name=""
+                                value={search}
+                        />
+                    </StyledExtra>
                     <Card onClick={() => history.push("/students/new")}>
                         <AddStudent>
                             <img src={add} alt="add a student" />
@@ -107,6 +123,13 @@ const Students = ({ history }: any) => {
                             </div>
                         </AddStudent>
                     </Card>
+
+                    <Card>
+                        <h2>Total Students</h2>
+                        <h3>
+                            <a> { totals.formTotals ? totals.formTotals.all: '' } </a>
+                        </h3>
+                    </Card>
                 </div>
             </PageGrid>
 
@@ -114,6 +137,22 @@ const Students = ({ history }: any) => {
     )
 }
 
+const StyledExtra = styled.div`
+    padding-bottom: 20px;
+    a {
+        width: 100%;
+        border-color: "#dcdcd";
+        display: block;
+        padding-top: 10px;
+
+        transition: color 125ms ease-in-out;
+        color: #0a8080;
+        cursor: pointer;
+
+        text-decoration: none;
+    }
+
+`
 
 const PageGrid = styled.div`
     display: grid;

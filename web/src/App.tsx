@@ -5,9 +5,14 @@ import { HttpLink } from 'apollo-link-http';
 import gql from 'graphql-tag';
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
 import { BrowserRouter as Router } from "react-router-dom";
-
+import Highcharts from 'highcharts'
 import  Pages from "./pages"
 
+import HC_exporting from 'highcharts/modules/exporting'
+import HighchartsReact from 'highcharts-react-official'
+
+
+HC_exporting(Highcharts)
 
 
 // Set up our apollo-client to point at the server we created

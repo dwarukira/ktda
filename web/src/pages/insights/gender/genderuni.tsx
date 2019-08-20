@@ -37,7 +37,10 @@ const UniversityTransationGender = () => {
             text: 'University Transation and gender'
         },
         subtitle: {
-            text: `Windows talking painted pasture yet its express parties use. Sure last upon he same as knew next. Of believed or diverted no rejoiced?`
+            text: `The number of students who qualified to university every year by gender`
+        },
+        credits: {
+            enabled: false
         },
 
         xAxis: {

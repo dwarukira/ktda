@@ -37,7 +37,9 @@ const GenderGradeDistribution = () => {
         chart: {
             zoomType: 'x',
         },
-
+        credits: {
+            enabled: false
+        },
         subtitle: {
             text: `
                 This shows the KCSE performance distrubution accross gender by grade, 

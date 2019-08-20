@@ -93,9 +93,9 @@ const AddSchoolPerformance = ({ toggleOpen, student }: any) => {
                         register={register({ required: true })}
                         options={
                         [
-                            "Term 1",
-                            "Term 2",
-                            "Term 3"
+                            "1",
+                            "2",
+                            "3"
                         ]
                     } />
                 </Row>
@@ -108,10 +108,10 @@ const AddSchoolPerformance = ({ toggleOpen, student }: any) => {
                         register={register({ required: true })}
                         options={
                         [
-                            "FORM 1",
-                            "FORM 2",
-                            "FORM 3",
-                            "FORM 4"
+                            "1",
+                            "2",
+                            "3",
+                            "4"
                         ]
                     } />
                 </Row>

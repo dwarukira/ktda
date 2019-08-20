@@ -96,6 +96,50 @@ export const DropdownInput = (props: any) => {
 }
 
 
+const StyledTip = styled.span`
+
+    font-size: 14px;
+    line-height: 20px;
+    background-color: #ffffff;
+    position: absolute;
+
+    right: 0;
+    top: 0;
+    left: 10px;
+    
+    z-index: 10;
+
+    color: #6c6c72;
+    padding-left: 24px;
+
+    text-align: left;
+    
+
+`
+
+const Tip = ({ tip }: any) => {
+
+    if(!tip) return null
+    return (<StyledTip>  
+           <i className="fas fa-info-circle"></i>
+            <span> { tip }</span>
+            </StyledTip>
+        )
+}
+
+export const InputStyle = styled.div`
+        .tip {
+            display: none;
+        }
+        &:hover {
+            .tip {
+                display: block;
+
+            }
+        }
+` as React.FC<any>
+
+
 export const TextArea = (props: any) => {
     return (
         <>
@@ -119,7 +163,7 @@ export const TextArea = (props: any) => {
                 </span>}
                 </WithError>
             </Col>
-            <Col sm={4}> </Col>
+            <Col sm={4} className="tip"> <Tip tip={props.tip} /> </Col>
 
         </>
 

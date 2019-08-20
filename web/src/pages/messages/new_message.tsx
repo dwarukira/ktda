@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 import { Title } from "../../components/text";
 import Form, { StyledFormActions } from "../students/new/form";
-import { Input } from "../students/new";
-import styled from "@emotion/styled";
+import { Input, InputStyle } from "../students/new";
+import styled from "styled-components";
 import colors from "../../styles/colors";
 import { Row, Col } from "react-grid-system";
 import Button from "../../components/Button";
@@ -12,13 +12,14 @@ import useForm from "react-hook-form";
 import { Checkbox, TextArea } from "../../components/form/input";
 // import { TextArea, Checkbox, DropdownInput } from "../../components/form/input";
 
+// $useGroup: String, $group: String, $phone: String
 const SendSMS = gql`
-    mutation SendSms($message: String!, $useGroup: String, $group: String, $phone: String) {
+    mutation SendSms($message: String!) {
         sendSms(input: {
             message: $message,
-            useGroup: $useGroup,
-            group: $group,
-            phone: $phone,
+            # useGroup: $useGroup,
+            # group: $group,
+            # phone: $phone,
 
         }) {
             ok
@@ -28,8 +29,8 @@ const SendSMS = gql`
 
 const NewMessage = ({ }) => {
     const { handleSubmit, register, errors } = useForm()
-    const [ selected, setSelected ] = useState("individual")
-    const [ checked, setChecked ] = useState(true)
+    const [selected, setSelected] = useState("individual")
+    const [checked, setChecked] = useState(true)
     const [sendMessage, { loading, error }] = useMutation(SendSMS, {
         onCompleted: (sendMessage) => {
             console.log(sendMessage);
@@ -46,9 +47,9 @@ const NewMessage = ({ }) => {
         sendMessage({
             variables: {
                 message: data.message,
-                phone: data.phone,
-                group: selected,
-                useGroup: checked
+                // phone: data.phone,
+                // group: selected,
+                // useGroup: checked
             }
         })
 
@@ -60,7 +61,7 @@ const NewMessage = ({ }) => {
         console.log(e, "------------>");
         setChecked(!checked)
         setSelected("group")
-        
+
     }
 
 
@@ -69,45 +70,51 @@ const NewMessage = ({ }) => {
             <Title> Compose a new message </Title>
 
             <Form>
-                <Row className="pt">
-                    <TextArea
+                <InputStyle>
+                    <Row className="pt">
+                        <TextArea
                             label="Message"
                             name="message"
                             register={register({ required: true })}
                             error={errors.name}
-                            rows="10" 
+                            rows="10"
                             cols="100"
+                            tip={"Input your new message in this text area"}
                         />
-                </Row>
+
+                    </Row>
+                </InputStyle>
+
+
+                <InputStyle>
+                    <Row className="pt">
+
+                        <Col sm={2}>
+                            <label> Individual </label>
+                        </Col>
+                        <Col sm={6}>
+                            <Checkbox
+                                checked={checked}
+
+                                onClick={(event: any) => {
+                                    console.log(event, "");
+
+                                    setChecked(!checked)
+                                    setSelected("individual")
+
+                                }} />
+                        </Col>
+                    </Row>
+                </InputStyle>
 
 
                 <Row className="pt">
-                   
-                    <Col sm={2}> 
-                        <label> Indivulal </label> 
+
+                    <Col sm={2}>
+                        <label> Use Group </label>
                     </Col>
                     <Col sm={6}>
-                        <Checkbox 
-                            checked={checked} 
-                            
-                            onClick={(event: any) => {
-                                console.log(event, "");
-                                
-                                setChecked(!checked)
-                                setSelected("individual")
-
-                        }} />
-                    </Col>
-                </Row>
-
-
-                <Row className="pt">
-                   
-                    <Col sm={2}> 
-                        <label> Use Group </label> 
-                    </Col>
-                    <Col sm={6}>
-                        <Checkbox 
+                        <Checkbox
                             checked={!checked}
                             onClick={handleOnChange}
                         />
@@ -115,35 +122,42 @@ const NewMessage = ({ }) => {
                 </Row>
 
 
-                {selected !== "individual" ? <Row className="pt">
-                    <Input
-                            label="Sender Group"
-                            name="name"
-                            dropdown={true}
-                            options={["Gurdian", "Schools"]}
-                            register={register({ required: true })}
-                            error={errors.name}
-                        />
-                </Row> :
+                {selected !== "individual" ?
+                    <InputStyle>
+                        <Row className="pt">
+                            <Input
+                                label="Sender Group"
+                                name="name"
+                                dropdown={true}
+                                options={["Gurdian", "Schools"]}
+                                register={register({ required: true })}
+                                error={errors.name}
+                                tip="Choose a group of people you want to send a message to. You can select [Individual] to send to individuals"
+                            />
+                        </Row>
+                    </InputStyle> :
+
+                    <InputStyle>
+                        <Row className="pt">
+                            <Input
+                                label="Phones"
+                                name="name"
+                                register={register({ required: true })}
+                                error={errors.name}
+                                tip="Enter a phone number you would like to send a message to. ie (0728**********) You can select [Use Groups] to send it to group of individuals"
+                            />
+                        </Row>
+                    </InputStyle>
+                }
 
 
-                <Row className="pt">
-                    <Input
-                            label="Phones"
-                            name="name"
-                            register={register({ required: true })}
-                            error={errors.name}
-                        />
-                </Row> }
 
-
-                
 
 
 
 
             </Form>
-            
+
 
             <StyledFormActions className="mt-10">
                 <Button background={colors.primary} color="white" > Preview </Button>

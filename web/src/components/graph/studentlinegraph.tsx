@@ -3,39 +3,30 @@ import colors from "../../styles/colors";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
 
-const Linegraph = ({ categories, data  }: any) => {
+const StudentLinegraph = ({ categories, data  }: any) => {
     const options: Highcharts.Options = {
         title: {
-            text: 'University Transation'
-        },
-        credits: {
-            enabled: false
+            text: 'Performance Trend'
         },
         subtitle: {
-            text: `Students percent that have qualified for the university per year` 
+            text: `` 
           },
-        
-          yAxis: {
-              title: {
-                  text: "Percent students"
-              }
-          },
+
+          credits: {
+            enabled: false
+        },
         xAxis: {
-            categories: categories,
-            
-            title : {
-                text: "Years"
-            },
+            categories: categories
         },
         series: [{
-            name: "Students",
+            name: "grades",
             color: colors.primary,
-            
             type: 'spline',
             data: data
         },],
         
     }
+    
 
     return (
         <>
@@ -49,4 +40,4 @@ const Linegraph = ({ categories, data  }: any) => {
 }
 
 
-export default Linegraph
+export default StudentLinegraph

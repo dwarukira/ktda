@@ -1,4 +1,5 @@
 import graphene
+import math
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
 from ktda.students.models import Student, School, SchoolPerformance, University, Form, Factory, Document
@@ -40,8 +41,9 @@ def get_paginator(qs, page_size, page, paginated_type, **kwargs):
     except PageNotAnInteger:
         page_obj = p.page(1)
     except EmptyPage:
-        print("----------------------->", p.num_pages)
+        print("----------------------->", p.num_pages, p)
         page_obj = p.page(p.num_pages)
+    
 
     print(p.num_pages)
     next_page = page_obj.next_page_number()
@@ -115,7 +117,7 @@ class Query(graphene.ObjectType):
     student = graphene.Field(StudentType, id=graphene.String())
 
     paginated_student = graphene.Field(
-        StudentPaginatedType, page=graphene.Int(), f=graphene.String(required=False))
+        StudentPaginatedType, page=graphene.Int(), f=graphene.String(required=False), search=graphene.String())
 
     schools = graphene.List(SchoolType)
 
@@ -138,20 +140,23 @@ class Query(graphene.ObjectType):
     def resolve_student_trends(self, info, id):
         """ resolve the student trends data"""
         student = Student.objects.get(student_id=id)
-        kcpe_marks_average = (student.kcpe / 5)
+        # kcpe_marks_average = (student.kcpe / 5)
         student_performance = student.performance.all()
 
         trends = []
+        grade_map = grades_with_value()
         for p in student_performance:
-            if p.grade:
-                grade_map = grades_with_value()
+            if p.grade and p.grade != '0':
+                
 
                 p = StudentTrend(
-                    term=f'{p.term}.{p.form}',
+                    term=f'{p.form}.{p.term}',
                     mark_value=grade_map[p.grade]
                 )
                 trends.append(p)
-
+        if student.kcse:
+            trends.append(StudentTrend(term='4.3', mark_value=grade_map[student.kcse]))
+        trends.append(StudentTrend(term='0.0', mark_value=math.ceil(student.kcpe / 41.67)))
         return trends
 
     def resolve_basic_analysis(self, info):
@@ -186,11 +191,23 @@ class Query(graphene.ObjectType):
     def resolve_paginated_student(self, info, **kwargs):
         page = kwargs["page"]
         f = kwargs.get("f", None)
+        search = kwargs.get("search", None)
+
+        print(search, "->")
 
         year = datetime.date.today().year
 
-        page_size = 5
+        page_size = 7
         qs = Student.objects.order_by("year").reverse()
+
+        if search != None or search != '':
+            
+            qs = qs.filter(
+                Q(name__icontains=search) | 
+                Q(year__icontains=search) |
+                Q(school__name__icontains=search)|
+                Q(factory__name__icontains=search) 
+            )
         if f == 'alumni':
             qs = qs.filter(kcse__isnull=False)
         if f == 'form1':

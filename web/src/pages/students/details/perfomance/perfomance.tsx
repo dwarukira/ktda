@@ -10,6 +10,8 @@ import Modal from "../../../../components/modal";
 import AddSchoolPerformance from "./addPerfomance";
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
+import Linegraph from "../../../../components/graph/linegraph";
+import StudentLinegraph from "../../../../components/graph/studentlinegraph";
 
 
 const GET_DETAILED_STUDENTS = gql`
@@ -32,6 +34,16 @@ const GET_DETAILED_STUDENTS = gql`
                 email
                 name
             }
+        }
+    }
+`
+
+
+const GET_PERFORMANCE_STUDENT = gql`
+    query StudentTrends($id: String!){
+        studentTrends(id: $id) {
+            markValue
+            term
         }
     }
 `
@@ -73,7 +85,14 @@ const StudentPerformance = ({ history, match }: any) => {
         }
     })
 
-    console.log(data);
+    const { data: performance, loading: performance_loading, error: performance_error } = useQuery(GET_PERFORMANCE_STUDENT, {
+        variables: {
+            id: match.params.id
+        }
+    })
+
+
+    console.log(performance, "----->");
     
     if(loading) {
         return <> Loading .. </>
@@ -83,7 +102,14 @@ const StudentPerformance = ({ history, match }: any) => {
         return <> Ops .. </>
     }
 
+    const sortPData = performance.studentTrends  ? performance.studentTrends.sort((a: any, b: any) => +a.term - +b.term) : []
 
+    
+    const  performanceData = sortPData ?  sortPData.map((v: any) => +v.markValue) : [] 
+
+    const categories = sortPData ? sortPData.map((v: any) => v.term) : [] 
+
+    
     return (
         <>
             <Modal show={open} handleClose={setOpen}>
@@ -91,7 +117,7 @@ const StudentPerformance = ({ history, match }: any) => {
             </Modal>
             <h3> Student Performance </h3>
             <Row>
-                <Col sm={8}>
+                <Col sm={6}>
                     <SchoolPerformanceTable
                         history={history}
                         performance={data.student.performance}
@@ -111,7 +137,10 @@ const StudentPerformance = ({ history, match }: any) => {
                             </Add>
                         </Card>
 
-
+                           <StudentLinegraph 
+                                data={performanceData}
+                                categories={categories}
+                           />
                         <Card>
                            
                         </Card>

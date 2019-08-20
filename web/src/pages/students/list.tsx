@@ -8,7 +8,6 @@ import { withRouter } from "react-router";
 import colors from "../../styles/colors";
 
 const StudentList = ({ history, students, fetchMore, nextPage, networkStatus, filter }: any) => {
-    console.log(nextPage, students.length);
     
     const studentsList = students.map((student: any, i: number) => (
         <React.Fragment key={student.studentId}>
