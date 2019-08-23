@@ -147,13 +147,15 @@ class Query(graphene.ObjectType):
         grade_map = grades_with_value()
         for p in student_performance:
             if p.grade and p.grade != '0':
-                
+                try:
 
-                p = StudentTrend(
-                    term=f'{p.form}.{p.term}',
-                    mark_value=grade_map[p.grade]
-                )
-                trends.append(p)
+                    p = StudentTrend(
+                        term=f'{p.form}.{p.term}',
+                        mark_value=grade_map[p.grade]
+                    )
+                    trends.append(p)
+                except Exception as e:
+                    print(e)
         if student.kcse:
             trends.append(StudentTrend(term='4.3', mark_value=grade_map[student.kcse]))
         trends.append(StudentTrend(term='0.0', mark_value=math.ceil(student.kcpe / 41.67)))

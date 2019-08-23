@@ -31,7 +31,7 @@ const Layout = ({ children }: IProps) => {
                         <li>
                             <i className="fas fa-home"></i> Dashboard </li> 
                     </NavLink>
-                    <NavLink to="/students"  activeClassName="active" > <li>  <i className="fas fa-users"></i>  Students </li> </NavLink>
+                    <NavLink to="/students"  activeClassName="active" exact > <li>  <i className="fas fa-users"></i>  Students </li> </NavLink>
                     
                     <div className="pt">
                    

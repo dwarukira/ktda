@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Row, Col } from "react-grid-system";
 import styled from "@emotion/styled";
+import Modal from "../../../components/modal";
+import Button from "../../../components/Button";
+import Edit from "./edit";
 
 const StyledDetails = styled.div`
     
@@ -49,13 +52,20 @@ const Detail = ({ data }: any) => {
 
 
 const Details = ({ title, data }: any) => {
+    const [show, setShow] = useState(false)
     return (
         <article>
             <h3> {title} </h3>
+            <Modal show={show}>
+
+                <Edit setOpen={setShow} />
+
+                
+            </Modal>
            
                 <Row>
                     <Col sm={6} className="left"> <Detail data={data}></Detail> </Col>
-                    <Col> <EditButton> <i className="fas fa-pen"></i> edit </EditButton>  </Col>
+                    <Col> <EditButton onClick={(e: any) => setShow(!show)}> <i className="fas fa-pen"></i> edit </EditButton>  </Col>
                 </Row>
             
         </article>

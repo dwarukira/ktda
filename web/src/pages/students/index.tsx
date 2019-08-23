@@ -63,7 +63,7 @@ const Students = ({ history }: any) => {
 
     const { data: totals, loading: totalsLoading, error: totalError } = useQuery(GET_TOTAL)
 
-    if(error || totalError) {
+    if(totalError) {
         return <Error />
     }
     
@@ -84,9 +84,11 @@ const Students = ({ history }: any) => {
                     setFilter("alumni")
 
                 }}> Alumni <span>  ({ totals.formTotals ? totals.formTotals.alumni: '' }) </span> </li>
+
+                <li> Expelled <span> (20) </span>  </li>
             </Tabs>
             
-            <PageGrid>
+            <PageGrid>      
                {!error ? (<>
                { data.paginatedStudent ? <StudentList 
                     students={data.paginatedStudent.objects} 
