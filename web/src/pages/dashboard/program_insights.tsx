@@ -12,7 +12,7 @@ import { Row, Col } from "react-grid-system";
 import { BeatLoader } from "react-spinners";
 import UniversityTransation from "./university_transation";
 import { Cards } from "../messages/messages";
-import Card from "../../components/card";
+import Card from "../../components/Card";
 import { Link, withRouter } from "react-router-dom";
 import add from "../../icons/add.svg"
 

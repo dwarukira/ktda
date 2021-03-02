@@ -1,6 +1,6 @@
 import React from "react"
 import Tab from "../../components/tabs";
-import Card from "../../components/card";
+import Card from "../../components/Card";
 import { Cards } from "./messages";
 import template from "../../icons/template.png"
 import paper_plane from "../../icons/paper_plane.svg"

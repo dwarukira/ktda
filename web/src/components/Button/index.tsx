@@ -38,7 +38,7 @@ const Button = styled.button`
     vertical-align: middle;
     white-space: nowrap;
 
-    background-color: ${props => props.background ? props.background : colors.white};
+    background-color: ${(props: any) => props.background ? props.background : colors.white};
     color: ${props => props.color ? props.color : colors.primary};
 
     outline: none;

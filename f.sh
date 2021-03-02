@@ -1,7 +1,5 @@
 
 
-python manage.py migrate
-python manage.py createsuperuser
 python manage.py fuckit --filename=/Users/warukira/Downloads/final.xlsx --year=2013
 
 python manage.py fuckit --filename=/Users/warukira/Downloads/final.xlsx --year=2014
