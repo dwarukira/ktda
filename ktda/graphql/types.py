@@ -66,6 +66,7 @@ class StudentInputType(graphene.InputObjectType):
     school = graphene.String()
 
     kcpe = graphene.String()
+    kcse = graphene.String()
 
     contact = graphene.String()
     guardian_contact = graphene.String()
@@ -89,4 +90,7 @@ class PerformanceInputType(graphene.InputObjectType):
 
 class SendMessageInputType(graphene.InputObjectType):
     message = graphene.String()
+    group = graphene.String()
+    phone = graphene.String()
+
     

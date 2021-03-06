@@ -1,57 +1,32 @@
 import React, { useState } from "react";
-import { withRouter } from "react-router";
-import StyledTable from "../../../../components/table";
-import { Row, Col } from "react-grid-system";
-import Card from "../../../../components/Card";
-
-import add from "../../../../icons/add.svg";
 import styled from "@emotion/styled";
-import Modal from "../../../../components/modal";
-import AddSchoolFee from "./addSchoolFee";
-import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
-import { getCash } from "../../../../utils";
+import { useHistory, useParams, useRouteMatch } from "react-router";
 
-const GET_DETAILED_STUDENTS = gql`
-  query GetDetailedStudent($id: String!) {
-    student(id: $id) {
-      name
-      id
-      studentId
+import { Row, Col } from "react-grid-system";
+import Card from "components/Card";
+import StyledTable from "components/table";
+import add from "icons/add.svg";
+import Modal from "components/modal";
 
-      totalSpent
-      fee {
-        id
-        ammount
-        year
-        term
-        form
-      }
+import { getCash } from "utils";
+import AddSchoolFee from "./addSchoolFee";
+import { GET_DETAILED_STUDENT } from "queries";
+import { SyncLoader } from "react-spinners";
+import colors from "styles/colors";
 
-      school {
-        phone
-        address
-        email
-        name
-      }
-    }
-  }
-`;
-
-const SchoolFeeTable = ({ history, fee }: any) => {
-  const feeList = fee.map((f: any) => (
+const SchoolFeeTable = ({ fee }: any) => {
+  const feeList = fee?.map((f: any) => (
     <tr key={f.id}>
       <td>
-        {" "}
         <h6>
-          {" "}
           {new Intl.NumberFormat("en-KE", {
             style: "currency",
             currency: "KSH",
             minimumFractionDigits: 0,
             maximumFractionDigits: 0,
-          }).format(f.ammount)}{" "}
-        </h6>{" "}
+          }).format(f.ammount)}
+        </h6>
       </td>
       <td> {f.term} </td>
       <td> {f.year} </td>
@@ -74,28 +49,31 @@ const SchoolFeeTable = ({ history, fee }: any) => {
   );
 };
 
-const StudentFee = ({ history, match }: any) => {
+const StudentFee = () => {
+  const history = useHistory();
+  const params = useParams<any>();
+
   const [open, setOpen] = useState<boolean>();
 
-  const { data } = useQuery(GET_DETAILED_STUDENTS, {
+  const { data, loading, refetch } = useQuery(GET_DETAILED_STUDENT, {
     variables: {
-      id: match.params.id,
+      id: params.id,
     },
   });
 
-  if (!data.student) {
-    return <> Loading .. </>;
+  if (loading) {
+    return <SyncLoader size={12} margin={2} color={colors.primary} />;
   }
 
   return (
-    <>
+    <React.Fragment>
       <Modal show={open} handleClose={setOpen}>
-        <AddSchoolFee toggleOpen={setOpen} student={match.params.id} />
+        <AddSchoolFee toggleOpen={setOpen} student={params.id } refetch={refetch} />
       </Modal>
       <h3> Fee Payments </h3>
       <Row>
         <Col sm={8}>
-          <SchoolFeeTable history={history} fee={data.student.fee} />
+          <SchoolFeeTable history={history} fee={data?.student?.fee} />
         </Col>
 
         <Col>
@@ -111,16 +89,12 @@ const StudentFee = ({ history, match }: any) => {
           <Card>
             <h2> Total Spent on student </h2>
             <h3>
-              {" "}
-              <a>
-                {" "}
-                {data.student ? getCash(data.student.totalSpent) : ""}{" "}
-              </a>{" "}
+              <a>{data?.student ? getCash(data?.student?.totalSpent) : ""}</a>
             </h3>
           </Card>
         </Col>
       </Row>
-    </>
+    </React.Fragment>
   );
 };
 
@@ -138,4 +112,4 @@ const Add = styled.div`
   }
 `;
 
-export default withRouter(StudentFee);
+export default StudentFee;

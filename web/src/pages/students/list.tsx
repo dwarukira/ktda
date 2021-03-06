@@ -1,10 +1,10 @@
 import React from "react";
+import { withRouter } from "react-router";
 import { Waypoint } from "react-waypoint";
 import { SyncLoader } from "react-spinners";
 
-import StyledTable from "../../components/table";
-import { withRouter } from "react-router";
-import colors from "../../styles/colors";
+import StyledTable from "components/table";
+import colors from "styles/colors";
 
 const StudentList = ({
   history,
@@ -26,8 +26,6 @@ const StudentList = ({
               },
 
               updateQuery: (pv: any, { fetchMoreResult }: any) => {
-                console.log(fetchMoreResult);
-
                 if (!fetchMoreResult) {
                   return pv;
                 }
@@ -76,9 +74,7 @@ const StudentList = ({
         {studentsList}
         <tr>
           <td>
-            {/* { networkStatus === 3 && <> <SyncLoader /> </> } */}
             <SyncLoader
-            //   sizeUnit={"px"}
               size={15}
               color={colors.primary}
               loading={networkStatus === 3}

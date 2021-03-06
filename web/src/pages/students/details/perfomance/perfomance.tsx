@@ -1,53 +1,21 @@
 import React, { useState } from "react";
-import { withRouter } from "react-router";
-import StyledTable from "../../../../components/table";
+import StyledTable from "components/table";
 import { Row, Col } from "react-grid-system";
-import Card from "../../../../components/Card";
+import Card from "components/Card";
 
-import add from "../../../../icons/add.svg";
+import add from "icons/add.svg";
 import styled from "@emotion/styled";
-import Modal from "../../../../components/modal";
+import Modal from "components/modal";
 import AddSchoolPerformance from "./addPerfomance";
-import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
-import Linegraph from "../../../../components/graph/linegraph";
-import StudentLinegraph from "../../../../components/graph/studentlinegraph";
+import StudentLinegraph from "components/graph/studentlinegraph";
+import { SyncLoader } from "react-spinners";
+import colors from "styles/colors";
+import { GET_DETAILED_STUDENT, GET_PERFORMANCE_STUDENT } from "queries";
+import { useHistory, useParams } from "react-router-dom";
 
-const GET_DETAILED_STUDENTS = gql`
-  query GetDetailedStudent($id: String!) {
-    student(id: $id) {
-      name
-      id
-      studentId
-      performance {
-        id
-        grade
-        year
-        term
-        form
-      }
-
-      school {
-        phone
-        address
-        email
-        name
-      }
-    }
-  }
-`;
-
-const GET_PERFORMANCE_STUDENT = gql`
-  query StudentTrends($id: String!) {
-    studentTrends(id: $id) {
-      markValue
-      term
-    }
-  }
-`;
-
-const SchoolPerformanceTable = ({ history, performance }: any) => {
-  const performanceList = performance.map((p: any) => (
+const SchoolPerformanceTable = ({ performance }: any) => {
+  const performanceList = performance?.map((p: any) => (
     <tr key={p.id}>
       <td>
         {" "}
@@ -73,74 +41,87 @@ const SchoolPerformanceTable = ({ history, performance }: any) => {
   );
 };
 
-const StudentPerformance = ({ history, match }: any) => {
+const StudentPerformance = () => {
+  const history = useHistory();
+  const params = useParams<any>();
+
   const [open, setOpen] = useState<boolean>();
 
-  const { data, loading, error } = useQuery(GET_DETAILED_STUDENTS, {
-    variables: {
-      id: match.params.id,
-    },
-  });
+  const { data, refetch: refetchStudentDetails, loading, error } = useQuery(
+    GET_DETAILED_STUDENT,
+    {
+      variables: {
+        id: params.id,
+      },
+    }
+  );
 
   const {
+    refetch,
     data: performance,
     loading: performance_loading,
     error: performance_error,
   } = useQuery(GET_PERFORMANCE_STUDENT, {
     variables: {
-      id: match.params.id,
+      id: params.id,
     },
   });
 
-  console.log(performance, "----->");
-
-  if (loading) {
-    return <> Loading .. </>;
+  if (!performance?.studentTrends || loading || performance_loading) {
+    return <SyncLoader size={12} margin={2} color={colors.primary} />;
   }
 
-  if (error) {
-    return <> Ops .. </>;
-  }
-
-  const sortPData = performance.studentTrends
-    ? performance.studentTrends.sort((a: any, b: any) => +a.term - +b.term)
+  const sortPData = performance?.studentTrends
+    ? performance?.studentTrends
+        ?.slice()
+        .sort((a: any, b: any) => +a?.term - +b?.term)
     : [];
 
   const performanceData = sortPData
-    ? sortPData.map((v: any) => +v.markValue)
+    ? sortPData?.map((v: any) => +v.markValue)
     : [];
 
-  const categories = sortPData ? sortPData.map((v: any) => v.term) : [];
+  const categories = sortPData ? sortPData?.map((v: any) => v.term) : [];
 
+  console.log(data?.student);
+  
   return (
-    <>
+    <React.Fragment>
       <Modal show={open} handleClose={setOpen}>
-        <AddSchoolPerformance toggleOpen={setOpen} student={match.params.id} />
+        <AddSchoolPerformance
+          toggleOpen={setOpen}
+          student={params.id}
+          refetch={() => {
+            refetchStudentDetails();
+            refetch();
+          }}
+        />
       </Modal>
       <h3> Student Performance </h3>
       <Row>
         <Col sm={6}>
           <SchoolPerformanceTable
             history={history}
-            performance={data.student.performance}
+            performance={data?.student?.performance}
           />
         </Col>
 
         <Col>
-          <Card>
-            <Add onClick={() => setOpen(true)}>
-              <img src={add} alt="add a student" />
-              <div className="title">
-                <span>Add Performance</span>
-              </div>
-            </Add>
-          </Card>
+          {data?.student?.performance?.length <= 12 && (
+            <Card>
+              <Add onClick={() => setOpen(true)}>
+                <img src={add} alt="add a student" />
+                <div className="title">
+                  <span>Add Performance</span>
+                </div>
+              </Add>
+            </Card>
+          )}
 
           <StudentLinegraph data={performanceData} categories={categories} />
-          <Card></Card>
         </Col>
       </Row>
-    </>
+    </React.Fragment>
   );
 };
 
@@ -158,4 +139,4 @@ const Add = styled.div`
   }
 `;
 
-export default withRouter(StudentPerformance);
+export default StudentPerformance;

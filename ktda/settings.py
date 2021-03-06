@@ -163,6 +163,7 @@ AUTHENTICATION_BACKENDS = [
 CORS_ORIGIN_WHITELIST = [ 
     "http://localhost:4200",
     "http://localhost:7050",
+    "http://localhost:5000",
     "http://localhost:3000",
 ]
 

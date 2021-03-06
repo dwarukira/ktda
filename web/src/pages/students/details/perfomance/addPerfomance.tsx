@@ -3,9 +3,9 @@ import { Row } from "react-grid-system";
 import { useForm } from "react-hook-form";
 import { Input } from "../../new";
 import Form, { StyledFormActions } from "../../new/form";
-import Button from "../../../../components/Button";
-import colors from "../../../../styles/colors";
-import { range } from "../../../../utils";
+import Button from "components/Button";
+import colors from "styles/colors";
+import { range } from "utils";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 
@@ -33,22 +33,19 @@ const CreatePerformance = gql`
   }
 `;
 
-const AddSchoolPerformance = ({ toggleOpen, student }: any) => {
+const AddSchoolPerformance = ({ toggleOpen, student, refetch }: any) => {
   const { register, handleSubmit, errors } = useForm();
 
   const [createPerformance, { loading, error }] = useMutation(
     CreatePerformance,
     {
       onCompleted: ({}) => {
-        console.log(createPerformance);
         toggleOpen(false);
       },
     }
   );
 
   const onSubmit = (data: any) => {
-    console.log(data);
-
     createPerformance({
       variables: {
         student: student,
@@ -57,6 +54,8 @@ const AddSchoolPerformance = ({ toggleOpen, student }: any) => {
         grade: data.grade,
         term: data.term,
       },
+    }).then(() => {
+      refetch()
     });
   };
 

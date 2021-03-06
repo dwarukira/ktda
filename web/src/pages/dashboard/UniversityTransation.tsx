@@ -1,26 +1,28 @@
-import Linegraph from "../../components/graph/linegraph";
 import React from "react";
+import { SyncLoader } from "react-spinners";
 import { useQuery } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 
-const GetUniversityTransation = gql`
-  query UniversityTransation {
-    universityTransation {
-      year
-      total
-    }
-  }
-`;
+import colors from "styles/colors";
+import { GetUniversityTransation } from "queries";
+import Linegraph from "components/graph/linegraph";
 
 const UniversityTransation = () => {
   const { data, loading, error } = useQuery(GetUniversityTransation);
 
   if (loading) {
-    return <> Loading .... </>;
+    return (
+      <React.Fragment>
+        <SyncLoader size={12} margin={2} color={colors.primary} />
+      </React.Fragment>
+    );
   }
 
   if (error) {
-    return <> Loading .... </>;
+    return (
+      <React.Fragment>{`${error?.message
+        ?.charAt(0)
+        ?.toUpperCase()}${error?.message?.slice(1)}`}</React.Fragment>
+    );
   }
 
   const { universityTransation } = data;

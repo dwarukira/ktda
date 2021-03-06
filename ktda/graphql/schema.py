@@ -1,4 +1,5 @@
 import graphene
+from graphql import GraphQLError
 import math
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
@@ -39,10 +40,13 @@ def get_paginator(qs, page_size, page, paginated_type, **kwargs):
     try:
         page_obj = p.page(page)
     except PageNotAnInteger:
-        page_obj = p.page(1)
+        # page_obj = p
+        GraphQLError('That email already exists')
     except EmptyPage:
         print("----------------------->", p.num_pages, p)
-        page_obj = p.page(p.num_pages)
+        GraphQLError('That email already exists')
+        page_obj = p
+        
     
 
     print(p.num_pages)

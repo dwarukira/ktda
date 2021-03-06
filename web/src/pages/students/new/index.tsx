@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-grid-system";
-import StyledInput, {
-  StyledSelect,
-  DropdownInput,
-} from "../../../components/form/input";
+import StyledInput, { DropdownInput } from "components/form/input";
 import Form, { StyledFormActions } from "./form";
-import Button from "../../../components/Button";
-import colors from "../../../styles/colors";
+import Button from "components/Button";
+import colors from "styles/colors";
 import styled from "@emotion/styled";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { withRouter } from "react-router-dom";
-import onboard from "../../../icons/students.png";
-import { Title } from "../../../components/text";
+import onboard from "icons/students.png";
+import { Title } from "components/text";
 import { useForm } from "react-hook-form";
+import Modal from "components/modal";
 
 export const WithError = styled.div`
   span {
@@ -153,8 +151,6 @@ const AddStudent = ({ history }: any) => {
 
   const [createStudent, { loading, error }] = useMutation(CREATE_STUDENT, {
     onCompleted({ createStudent }) {
-      // console.log(data);
-
       history.push(`/students/new/${createStudent.student.studentId}/complete`);
     },
   });
@@ -166,12 +162,12 @@ const AddStudent = ({ history }: any) => {
   const { data: school } = useQuery(GET_SCHOOLS);
 
   useEffect(() => {
-    if (factory.factories) {
-      setFactories(factory.factories.map((f: any) => f.name));
+    if (factory?.factories) {
+      setFactories(factory?.factories?.map((f: any) => f.name));
     }
 
-    if (school.schools) {
-      const set = new Set(school.schools.map((s: any) => s.name));
+    if (school?.schools) {
+      const set = new Set(school?.schools?.map((s: any) => s.name));
       setSchools(Array.from(set));
     }
   }, [factory, school]);
@@ -199,52 +195,69 @@ const AddStudent = ({ history }: any) => {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
+      <Modal show={false}>
+        You are sure you want to care a new student, Clicking continue will submit a new student
+      </Modal>
+
       <Title> Add Student </Title>
       <div className="center-text">
         <img src={onboard} alt="" />
         <h2> Hope For A Bright Future! </h2>
+        <p> Let's get started by bringing them onboard </p>
       </div>
 
       <fieldset>
         <h2> Basic </h2>
         <Container>
-          <Row className="pt">
-            <Input
-              label="Full Name"
-              name="name"
-              register={register({ required: true })}
-              error={errors.name}
-            />
-          </Row>
+          <InputStyle>
+            <Row className="pt">
+              <Input
+                label="Full Name"
+                name="name"
+                register={register({ required: true })}
+                error={errors.name}
+                tip="What's the full name of the student?. This should be the offical name used on the scholarship"
+              />
+            </Row>
+          </InputStyle>
 
-          <Row className="pt">
-            <Input
-              label="Factory"
-              name="factory"
-              error={errors.factory}
-              dropdown={true}
-              options={factories}
-              register={register({ required: true })}
-            />
-          </Row>
+          <InputStyle>
+            <Row className="pt">
+              <Input
+                label="Factory"
+                name="factory"
+                error={errors.factory}
+                dropdown={true}
+                options={factories}
+                register={register({ required: true })}
+                tip="Which factory does the student come from?. Select from the preloaded list"
+              />
+            </Row>
+          </InputStyle>
 
-          <Row className="pt">
-            <Input
-              label="Contact"
-              name="contact"
-              error={errors.contact}
-              register={register({ required: true })}
-            />
-          </Row>
+          <InputStyle>
+            <Row className="pt">
+              <Input
+                label="Contact - (Phone)"
+                name="contact"
+                error={errors.contact}
+                register={register({ required: true })}
+                tip="The phone number of the student. Not required"
+              />
+            </Row>
+          </InputStyle>
 
-          <Row className="pt">
-            <Input
-              label="Guardian Contact"
-              register={register({ required: true })}
-              error={errors.guardian_contact}
-              name="guardian_contact"
-            />
-          </Row>
+          <InputStyle>
+            <Row className="pt">
+              <Input
+                label="Guardian Contact - (Phone)"
+                register={register({ required: true })}
+                error={errors.guardian_contact}
+                name="guardian_contact"
+                tip="Guardian's Contact details. Used to reach out to all guardian"
+              />
+            </Row>
+          </InputStyle>
 
           <Row className="pt">
             <Input

@@ -9,7 +9,7 @@ import Button from "../../components/Button";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { useForm } from "react-hook-form";
-import { Checkbox, TextArea } from "../../components/form/input";
+import { Checkbox, TextArea } from "components/form/input";
 // import { TextArea, Checkbox, DropdownInput } from "../../components/form/input";
 
 // $useGroup: String, $group: String, $phone: String
@@ -54,7 +54,6 @@ const NewMessage = ({}) => {
   };
 
   const handleOnChange = (e: any) => {
-    console.log(e, "------------>");
     setChecked(!checked);
     setSelected("group");
   };
@@ -79,6 +78,7 @@ const NewMessage = ({}) => {
         </InputStyle>
 
         <InputStyle>
+          <Col sm={4} className="tip"></Col>
           <Row className="pt">
             <Col sm={2}>
               <label> Individual </label>

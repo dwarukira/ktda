@@ -1,39 +1,27 @@
 import React from "react";
-import ProgramInsights from "./program_insights";
 import { useQuery } from "@apollo/react-hooks";
-import gql from "graphql-tag";
-import Error from "../../components/Error";
+import Loader from "react-spinners/BarLoader";
 
-const BasicAnalysis = gql`
-  query BasicAnalysis {
-    basicAnalysis {
-      totalAlumni
-      totalAmmount
-      totalStudents
-      totalUniversityTransation
-    }
-  }
-`;
+import Error from "components/Error";
+import { BasicAnalysis } from "queries";
+
+import ProgramInsights from "./ProgramInsights";
 
 const Dashboard = () => {
   const { data, loading, error } = useQuery(BasicAnalysis);
 
   if (error) {
-    return (
-      <>
-        <Error />
-      </>
-    );
+    return <Error />;
   }
 
-  if(loading) {
-      return <>  </>
+  if (loading) {
+    return <Loader />;
   }
 
   return (
-    <>
+    <React.Fragment>
       <ProgramInsights loading={loading} data={data.basicAnalysis} />
-    </>
+    </React.Fragment>
   );
 };
 

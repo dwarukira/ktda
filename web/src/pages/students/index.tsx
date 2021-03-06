@@ -1,161 +1,62 @@
 import React, { useState } from "react";
-import StudentList from "./list";
-import Tabs from "../../components/tabs";
 import styled from "@emotion/styled";
-import Card from "../../components/Card";
-import { NavLink, withRouter } from "react-router-dom";
-import add from "../../icons/add.svg";
-import { useQuery } from "@apollo/react-hooks";
-import gql from "graphql-tag";
-import colors from "../../styles/colors";
 import { SyncLoader } from "react-spinners";
-import Search from "../../components/form/search";
-import Error from "../../components/Error";
+import { useQuery } from "@apollo/react-hooks";
+import { NavLink, useHistory } from "react-router-dom";
 
-const GET_STUDENTS = gql`
-  query GetStudentsPaginated($page: Int!, $f: String, $search: String) {
-    paginatedStudent(page: $page, f: $f, search: $search) {
-      objects {
-        name
-        year
-        studentId
-        school {
-          name
-        }
+import add from "icons/add.svg";
+import colors from "styles/colors";
+import Card from "components/Card";
+import Error from "components/Error";
+import Search from "components/form/search";
+import { GET_STUDENTS, GET_TOTAL } from "queries";
 
-        factory {
-          name
-        }
-      }
+import StudentList from "./list";
+import StudentsTabs from "./components/Tabs";
 
-      nextPage
-    }
-  }
-`;
-
-const GET_TOTAL = gql`
-  query FormTotals {
-    formTotals {
-      form1
-      form2
-      all
-      form3
-      form4
-      alumni
-    }
-  }
-`;
-
-const Students = ({ history }: any) => {
+const Students = () => {
+  const history = useHistory();
   const [filter, setFilter] = useState<string>();
   const [search, setSearch] = useState("");
 
-  const { data, error, loading, fetchMore, networkStatus } = useQuery(
-    GET_STUDENTS,
-    {
-      variables: {
-        page: 1,
-        f: filter,
-        search: search,
-      },
-      notifyOnNetworkStatusChange: true,
-    }
-  );
+  const { data, error, fetchMore, networkStatus } = useQuery(GET_STUDENTS, {
+    variables: {
+      page: 1,
+      f: filter,
+      search: search,
+    },
+    fetchPolicy: "network-only",
+    notifyOnNetworkStatusChange: true,
+  });
 
-  const { data: totals, loading: totalsLoading, error: totalError } = useQuery(
-    GET_TOTAL
-  );
+  const { data: totals, error: totalError } = useQuery(GET_TOTAL);
 
+  console.log(error);
+  
   if (totalError) {
     return <Error />;
   }
 
   return (
-    <>
+    <React.Fragment>
       <h1> Students </h1>
-      <Tabs people={totals}>
-        <li onClick={() => setFilter("")}>
-          {" "}
-          All <span>
-            {" "}
-            ({totals.formTotals ? totals.formTotals.all : ""}){" "}
-          </span>{" "}
-        </li>
-        <li onClick={() => setFilter("form1")}>
-          {" "}
-          Form 1{" "}
-          <span>
-            {" "}
-            ({totals.formTotals ? totals.formTotals.form1 : ""}){" "}
-          </span>{" "}
-        </li>
-        <li onClick={() => setFilter("form2")}>
-          {" "}
-          Form 2{" "}
-          <span>
-            {" "}
-            ({totals.formTotals ? totals.formTotals.form2 : ""}){" "}
-          </span>{" "}
-        </li>
-        <li onClick={() => setFilter("form3")}>
-          {" "}
-          Form 3{" "}
-          <span>
-            {" "}
-            ({totals.formTotals ? totals.formTotals.form3 : ""}){" "}
-          </span>{" "}
-        </li>
-        <li
-          onClick={() => {
-            data.paginatedStudent.nextPage = 1;
-            setFilter("form4");
-          }}
-        >
-          {" "}
-          Form 4{" "}
-          <span>
-            {" "}
-            ({totals.formTotals ? totals.formTotals.form4 : ""}){" "}
-          </span>{" "}
-        </li>
-        <li
-          onClick={() => {
-            data.paginatedStudent.nextPage = 1;
-            setFilter("alumni");
-          }}
-        >
-          {" "}
-          Alumni{" "}
-          <span>
-            {" "}
-            ({totals.formTotals ? totals.formTotals.alumni : ""}){" "}
-          </span>{" "}
-        </li>
-
-        <li>
-          {" "}
-          Expelled <span> (20) </span>{" "}
-        </li>
-      </Tabs>
-
+      <StudentsTabs totals={totals} onClickTab={setFilter} />
       <PageGrid>
         {!error ? (
           <>
-            {data.paginatedStudent ? (
+            {data?.paginatedStudent ? (
               <StudentList
-                students={data.paginatedStudent.objects}
-                nextPage={data.paginatedStudent.nextPage}
+                students={data?.paginatedStudent?.objects}
+                nextPage={data?.paginatedStudent?.nextPage}
                 networkStatus={networkStatus}
                 filter={filter}
                 fetchMore={fetchMore}
               />
             ) : (
               <SyncLoader
-                // sizeUnit={"px"}
-                
                 size={15}
                 color={colors.primary}
-                loading={!data.paginatedStudent}
+                loading={!data?.paginatedStudent}
               />
             )}{" "}
           </>
@@ -186,12 +87,12 @@ const Students = ({ history }: any) => {
           <Card>
             <h2>Total Students</h2>
             <h3>
-              <a> {totals.formTotals ? totals.formTotals.all : ""} </a>
+              <a> {totals?.formTotals ? totals?.formTotals?.all : ""} </a>
             </h3>
           </Card>
         </div>
       </PageGrid>
-    </>
+    </React.Fragment>
   );
 };
 
@@ -236,4 +137,4 @@ const AddStudent = styled.div`
   }
 `;
 
-export default withRouter(Students);
+export default Students;

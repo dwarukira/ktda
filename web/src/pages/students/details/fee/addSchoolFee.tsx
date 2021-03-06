@@ -33,13 +33,12 @@ const CreateFee = gql`
   }
 `;
 
-const AddSchoolFee = ({ toggleOpen, student }: any) => {
+const AddSchoolFee = ({ toggleOpen, student, refetch }: any) => {
   const [ammount, setAmmount] = useState("1");
   const { register, handleSubmit, errors } = useForm();
   const [createFee, { loading, error }] = useMutation(CreateFee, {
     onCompleted: ({ createFee }) => {
-      console.log(createFee);
-
+      refetch()
       toggleOpen(false);
     },
   });
@@ -48,11 +47,8 @@ const AddSchoolFee = ({ toggleOpen, student }: any) => {
     // format number 1000000 to 1,234,567
     return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
-  console.log(formatNumber(ammount));
 
   const onSubmit = (data: any) => {
-    console.log(data);
-
     createFee({
       variables: {
         student: student,
@@ -77,9 +73,7 @@ const AddSchoolFee = ({ toggleOpen, student }: any) => {
               name="ammount"
               register={register({ required: true })}
               label="Amount"
-              type="text"
-              // value={formatNumber(ammount)}
-              // onChange={(e: any) => setAmmount(e.target.value)}
+              type="number"
               error={errors.ammount}
             />
           }
@@ -93,7 +87,7 @@ const AddSchoolFee = ({ toggleOpen, student }: any) => {
             type="text"
             error={errors.term}
             register={register({ required: true })}
-            options={["Term 1", "Term 2", "Term 3"]}
+            options={["1", "2", "3"]}
           />
         </Row>
 
@@ -105,7 +99,7 @@ const AddSchoolFee = ({ toggleOpen, student }: any) => {
             type="text"
             error={errors.form}
             register={register({ required: true })}
-            options={["FORM 1", "FORM 2", "FORM 3", "FORM 4"]}
+            options={["1", "2", "3", "4"]}
           />
         </Row>
 
