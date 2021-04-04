@@ -47,3 +47,4 @@ xlrd==1.2.0
 gunicorn
 django-heroku
 Pillow
+pandas
