@@ -48,3 +48,4 @@ gunicorn
 django-heroku
 Pillow
 pandas
+django-graphql-jwt
