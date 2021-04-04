@@ -166,6 +166,7 @@ CORS_ORIGIN_WHITELIST = [
     "http://localhost:7050",
     "http://localhost:5000",
     "http://localhost:3000",
+    "https://ktda.netlify.app"
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # 'data' is my media folder
