@@ -82,8 +82,8 @@ class Student(models.Model):
     school = models.ForeignKey(School, on_delete=models.CASCADE, related_name='students')
     university = models.ForeignKey(University, on_delete=models.CASCADE, blank=True, null=True, related_name='students')
     course_taken = models.CharField(max_length=64)
-    contact =  models.CharField(max_length=12, blank=True)
-    guardian_contact  = models.CharField(max_length=12, blank=True)
+    contact =  models.CharField(max_length=50, blank=True)
+    guardian_contact  = models.CharField(max_length=50, blank=True)
     kcpe_index = models.CharField("Index Number", max_length=30, blank=True, null=True)
     kcse_index = models.CharField("Index", max_length=30, blank=True, null=True)
 
