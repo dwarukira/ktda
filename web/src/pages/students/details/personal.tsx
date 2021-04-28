@@ -57,7 +57,7 @@ const Personal = ({ match }: any) => {
     <>
       <Details
         title="Basic"
-        student={student} 
+        student={student}
         refetch={refetch}
         type="basic"
         data={[
@@ -95,24 +95,17 @@ const Personal = ({ match }: any) => {
             name: "Year",
             value: `${dataOrNone(student.year)}`,
           },
-
-          {
-            name: "Form",
-            value: `${dataOrNone(student.form)}`,
-          },
-
           {
             name: "Index Number",
             value: `${dataOrNone(student.kcseIndex)}`,
           },
-
         ]}
       />
 
       <Details
         title="School Details"
         type="school_details"
-        student={student} 
+        student={student}
         refetch={refetch}
         data={[
           {
@@ -121,20 +114,17 @@ const Personal = ({ match }: any) => {
           },
           {
             name: "Form",
-          
+
             value: `${dataOrNone(student.form)}`,
           },
           {
             name: "Contact",
             value: `${dataOrNone(student.school.phone)}`,
-
           },
           {
             name: "Address",
             value: `${dataOrNone(student.school.address)}  `,
           },
-
-         
         ]}
       />
     </>

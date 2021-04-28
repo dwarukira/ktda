@@ -199,12 +199,13 @@ class Document(models.Model):
     PERF_DOC = 2
     APP_DOC = 3
     FEE_DOC = 4
+    OTHER = 5
     DOC_CHOICES = (
         (CONSET_DOC, "Conset form"),
-        (PERF_DOC, "Perfomance "),
-        (APP_DOC, "application details"),
-        (FEE_DOC, "fee statement")
-
+        (PERF_DOC, "Perfomance"),
+        (APP_DOC, "Application Details"),
+        (FEE_DOC, "Fee Statement"),
+        (OTHER, "Other")
     )
     name = models.CharField(max_length=64, unique=False, null=True, blank=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='documents')
